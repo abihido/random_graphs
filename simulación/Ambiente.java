@@ -4,26 +4,26 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class ambiente extends JFrame {
+public class Ambiente extends JFrame {
     int width;
     int height;
 
     ArrayList<Node> nodes;
     ArrayList<edge> edges;
 
-    public ambiente() { //Constructor
+    public Ambiente() { //Constructor
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        nodes = new ArrayList<Node>();
-        edges = new ArrayList<edge>();
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
         width = 30;
         height = 30;
     }
 
-    public ambiente(String name) { //Construct with label
+    public Ambiente(String name) { //Construct with label
         this.setTitle(name);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        nodes = new ArrayList<Node>();
-        edges = new ArrayList<edge>();
+        nodes = new ArrayList<>();
+        edges = new ArrayList<>();
         width = 30;
         height = 30;
     }
@@ -40,7 +40,7 @@ public class ambiente extends JFrame {
     }
 
     class edge {
-        int i,j;
+        int i, j;
 
         public edge(int ii, int jj) {
             i = ii;
@@ -50,12 +50,13 @@ public class ambiente extends JFrame {
 
     public void addNode(String name, int x, int y) {
         //add a node at pixel (x,y)
-        nodes.add(new Node(name,x,y));
+        nodes.add(new Node(name, x, y));
         this.repaint();
     }
+
     public void addEdge(int i, int j) {
         //add an edge between nodes i and j
-        edges.add(new edge(i,j));
+        edges.add(new edge(i, j));
         this.repaint();
     }
 
@@ -70,16 +71,16 @@ public class ambiente extends JFrame {
         }
 
         for (Node n : nodes) {
-            int nodeWidth = Math.max(width, f.stringWidth(n.name)+width/2);
+            int nodeWidth = Math.max(width, f.stringWidth(n.name) + width / 2);
             g.setColor(Color.white);
-            g.fillOval(n.x-nodeWidth/2, n.y-nodeHeight/2,
+            g.fillOval(n.x - nodeWidth / 2, n.y - nodeHeight / 2,
                     nodeWidth, nodeHeight);
             g.setColor(Color.black);
-            g.drawOval(n.x-nodeWidth/2, n.y-nodeHeight/2,
+            g.drawOval(n.x - nodeWidth / 2, n.y - nodeHeight / 2,
                     nodeWidth, nodeHeight);
 
-            g.drawString(n.name, n.x-f.stringWidth(n.name)/2,
-                    n.y+f.getHeight()/2);
+            g.drawString(n.name, n.x - f.stringWidth(n.name) / 2,
+                    n.y + f.getHeight() / 2);
         }
     }
 }
@@ -87,17 +88,17 @@ public class ambiente extends JFrame {
 class testGraphDraw {
     //Here is some example syntax for the GraphDraw class
     public static void main(String[] args) {
-        ambiente frame = new ambiente("Test Window");
+        Ambiente frame = new Ambiente("Test Window");
 
-        frame.setSize(400,300);
+        frame.setSize(400, 300);
 
         frame.setVisible(true);
 
-        frame.addNode("a", 50,50);
-        frame.addNode("b", 100,100);
-        frame.addNode("longNode", 200,200);
-        frame.addEdge(0,1);
-        frame.addEdge(0,2);
+        frame.addNode("a", 50, 50);
+        frame.addNode("b", 100, 100);
+        frame.addNode("longNode", 200, 200);
+        frame.addEdge(0, 1);
+        frame.addEdge(0, 2);
     }
 }
 
