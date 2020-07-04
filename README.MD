@@ -12,3 +12,5 @@ mediante el uso del modelado de grafos aleatorios binomiales
     - Existe transmición
     
 nos basamos en el uso de un articulo de pandemias :V
+
+ud no me agradan que quede claro

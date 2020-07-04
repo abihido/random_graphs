@@ -1,6 +1,13 @@
 import static java.lang.Math.random;
 
 class Ambiente {
+
+    Ambiente(
+            int numeroNodos,
+            int probabilidadConexion
+    ) {
+        crearGrafo(numeroNodos, probabilidadConexion);
+    }
     private Agente[] nodos;
 
     void crearGrafo(int n, double p) {
@@ -14,5 +21,7 @@ class Ambiente {
             }
         }
     }
+
+
 
 }
