@@ -3,12 +3,17 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import static java.lang.Math.cos;
 import static java.lang.Math.random;
 
 public class Ambiente extends JFrame {
-    int width;
-    int height;
 
+    int x,y,N,salto,height,width;
+    int angle=0;
+    int Ww=1200;
+    int Hw=700;
+    Boolean state=false;
 
     private Agente[] nodos;
     ArrayList<Node> nodes;
@@ -20,17 +25,28 @@ public class Ambiente extends JFrame {
         edges = new ArrayList<>();
         width = 30;
         height = 30;
+        N=numeroNodos;
+        salto=360/N;
         crearGrafo(numeroNodos, probabilidadConexion);
     }
 
+    void getYXC(){
 
+        int r= (Hw-200)/2;
+        y= (int) ( Hw/2 + r*Math.sin(Math.toRadians(angle)));
+        x= (int) (Ww/2 + r*Math.cos(Math.toRadians(angle)));
+        angle = angle+salto;
+        System.out.println("x "+Integer.toString(x)+" y " +Integer.toString(y)+" a "+Integer.toString(angle));
+    }
     void crearGrafo(int n, double p) {
         nodos = new Agente[n];
         nodos[0]=new Agente();
-        addNode(Integer.toString(0),10,width/2);
+        getYXC();
+        addNode(Integer.toString(0),x,y);
         for (int i = 1; i < n; i++) {
             nodos[i]=new Agente();
-            addNode(Integer.toString(i),10+i*i,width/2+i*30);
+            getYXC();
+            addNode(Integer.toString(i),x,y);
             for (int j = 0; j < i; j++) {
                 if (random() < p) {
                     nodos[i].nuevoAmigo(nodos[j]);
@@ -100,9 +116,9 @@ public class Ambiente extends JFrame {
 class testGraphDraw {
     //Here is some example syntax for the GraphDraw class
     public static void main(String[] args) {
-        Ambiente frame = new Ambiente(5,0.5);
+        Ambiente frame = new Ambiente(15,0.5);
 
-        frame.setSize(400, 300);
+        frame.setSize(1200, 700);
 
         frame.setVisible(true);
 
