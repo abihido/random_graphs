@@ -11,6 +11,9 @@ public class Ambiente extends JFrame {
     ArrayList<Node> nodes;
     ArrayList<edge> edges;
 
+    public void tick() {
+    }
+
     public Ambiente() { //Constructor
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         nodes = new ArrayList<>();
