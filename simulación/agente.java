@@ -11,7 +11,7 @@ class Agente {
         this.estado= estado.Normal;
         this.probabilidad_contagio=(3-antivirus*usuario-firewall*usuario-usuario)/3;
         this.probabilidad_recuperacion=(antivirus*usuario+usuario)/2;
-        this.probabilidad_inservible=(antivirus*usuario)/usuario;
+        this.probabilidad_inservible=1-antivirus*usuario;
         this.distribucion_amigos=null;
     }
 
