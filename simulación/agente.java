@@ -121,14 +121,12 @@ class Agente {
         }
     }
     public void VamosAContagiar(){
-        Agente[] amigos_arr=new Agente[numeroAmigos()];
-        amigos_arr= amigos.toArray(amigos_arr);
         distribucion_comunicacion_amigos();
         if(this.estado==estado.contagiado){
             double p=Math.random();
             for(int i=0;i<numeroAmigos();i++){
-                if(p<this.distribucion_amigos[i] && amigos_arr[i].getEstado()==estado.Normal){
-                    amigos_arr[i].contagiarse();
+                if(p<this.distribucion_amigos[i] && amigos.get(i).getEstado()==estado.Normal){
+                    amigos.get(i).contagiarse();
                 }
             }
             recuperarse();
