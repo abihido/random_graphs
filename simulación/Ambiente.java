@@ -11,8 +11,8 @@ public class Ambiente extends JFrame {
 
     int x,y,N,salto,height,width;
     int angle=0;
-    int Ww=1200;
-    int Hw=700;
+    int Ww=1800;
+    int Hw=1080;
     Boolean state=false;
 
     private Agente[] nodos;
@@ -42,11 +42,11 @@ public class Ambiente extends JFrame {
         nodos = new Agente[n];
         nodos[0]=new Agente();
         getYXC();
-        addNode(Integer.toString(0),x,y);
+        addNode(Integer.toString(0),x,y,nodos[0]);
         for (int i = 1; i < n; i++) {
             nodos[i]=new Agente();
             getYXC();
-            addNode(Integer.toString(i),x,y);
+            addNode(Integer.toString(i),x,y,nodos[i]);
             for (int j = 0; j < i; j++) {
                 if (random() < p) {
                     nodos[i].nuevoAmigo(nodos[j]);
@@ -61,11 +61,13 @@ public class Ambiente extends JFrame {
     class Node {
         int x, y;
         String name;
+        Agente model;
 
-        public Node(String myName, int myX, int myY) {
+        public Node(String myName, int myX, int myY,Agente ag) {
             x = myX;
             y = myY;
             name = myName;
+            model = ag;
         }
     }
 
@@ -78,9 +80,9 @@ public class Ambiente extends JFrame {
         }
     }
 
-    public void addNode(String name, int x, int y) {
+    public void addNode(String name, int x, int y,Agente modelo) {
         //add a node at pixel (x,y)
-        nodes.add(new Node(name, x, y));
+        nodes.add(new Node(name, x, y, modelo));
     }
 
     public void addEdge(int i, int j) {
@@ -116,9 +118,9 @@ public class Ambiente extends JFrame {
 class testGraphDraw {
     //Here is some example syntax for the GraphDraw class
     public static void main(String[] args) {
-        Ambiente frame = new Ambiente(15,0.5);
+        Ambiente frame = new Ambiente(30,0.5);
 
-        frame.setSize(1200, 700);
+        frame.setSize(1800, 1080);
 
         frame.setVisible(true);
 
