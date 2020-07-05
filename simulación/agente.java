@@ -3,15 +3,15 @@ import java.util.List;
 
 class Agente {
 
-    Agente() {
+    Agente(double a, double b) {
         this.amigos = new ArrayList<Agente>();
-        this.antivirus = Math.random();//con 0 no tener antivirus y cercano a 1 buen antivirus
-        this.usuario = Math.random();//con 0 no tener  y cercano a 1 buen antivirus
-        this.firewall = Math.random();//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
+        this.antivirus = Math.random()*(b-a)+a;//con 0 no tener antivirus y cercano a 1 buen antivirus
+        this.usuario = Math.random()*(b-a)+a;//con 0 no tener  y cercano a 1 buen antivirus
+        this.firewall = Math.random()*(b-a)+a;//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
         this.estado= estado.Normal;
         this.probabilidad_contagio=(3-antivirus*usuario-firewall*usuario-usuario)/3;
         this.probabilidad_recuperacion=(antivirus*usuario+usuario)/2;
-        this.probabilidad_inservible=1-antivirus*usuario;
+        this.probabilidad_inservible=(antivirus*usuario)/usuario;
         this.distribucion_amigos=null;
     }
 
