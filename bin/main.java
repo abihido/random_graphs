@@ -1,7 +1,7 @@
 //TODO: Agregar lo de packete :v y llenar
 
 class Main {
-   void main(){
+   public static void main(String arg[]){
 
    }
 }

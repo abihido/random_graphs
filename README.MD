@@ -13,4 +13,10 @@ mediante el uso del modelado de grafos aleatorios binomiales
     
 nos basamos en el uso de un articulo de pandemias :V
 
-ud no me agradan que quede claro
+### `Falta:`
+    - distribución de nodos
+    - cambiar color los nodos
+    - generar observador
+    - Tema de los contagios
+    - ambiente controla nodos(?)
+    - generar metricas
