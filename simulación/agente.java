@@ -8,14 +8,19 @@ class Agente {
         this.antivirus = Math.random();//con 0 no tener antivirus y cercano a 1 buen antivirus
         this.usuario = Math.random();//con 0 no tener  y cercano a 1 buen antivirus
         this.firewall = Math.random();//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
-        this.estado=1;
+        this.estado= estado.Normal;
         this.probabilidad_contagio=(3-antivirus*usuario-firewall*usuario-usuario)/3;
         this.probabilidad_recuperacion=(antivirus*usuario+usuario)/2;
         this.probabilidad_inservible=1-antivirus*usuario;
         this.distribucion_amigos=null;
     }
 
-
+    enum estado{
+        Normal,
+        contagiado,
+        inservible,
+        inmune
+    }
     private List<Agente> amigos;
     public void nuevoAmigo(Agente conocido) {
         amigos.add(conocido);
@@ -23,7 +28,7 @@ class Agente {
     private double antivirus;
     private double usuario ;
     private double firewall;
-    private int estado;//1 es normal 2 es infectado y 3 es inservible
+    private estado estado;
     private double probabilidad_contagio;
     private double probabilidad_recuperacion;
     private double probabilidad_inservible;
@@ -66,30 +71,30 @@ class Agente {
         this.firewall = firewall;
     }
 
-    public int getEstado() {
+    public Agente.estado getEstado() {
         return estado;
     }
 
-    public void setEstado(int estado) {
+    public void setEstado(Agente.estado estado) {
         this.estado = estado;
     }
 
     public void contagiarse(){
         double p=Math.random();
-        if(p>probabilidad_contagio){
-            this.estado = 2;
+        if(p<probabilidad_contagio){
+            this.estado = estado.contagiado;
         }
     }
     public void recuperarse(){
         double p=Math.random();
-        if(p>probabilidad_recuperacion){
-            this.estado = 1;
+        if(p<probabilidad_recuperacion){
+            this.estado = estado.inmune;
         }
     }
     public void inservible(){
         double p=Math.random();
-        if(p>probabilidad_inservible){
-            this.estado = 3;
+        if(p<probabilidad_inservible){
+            this.estado = estado.inservible;
         }
     }
 
@@ -115,5 +120,22 @@ class Agente {
             }
         }
     }
+    public void VamosAContagiar(){
+        Agente[] amigos_arr=new Agente[numeroAmigos()];
+        amigos_arr= amigos.toArray(amigos_arr);
+        distribucion_comunicacion_amigos();
+        if(this.estado==estado.contagiado){
+            double p=Math.random();
+            for(int i=0;i<numeroAmigos();i++){
+                if(p<this.distribucion_amigos[i] && amigos_arr[i].getEstado()==estado.Normal){
+                    amigos_arr[i].contagiarse();
+                }
+            }
+            recuperarse();
+            inservible();
+        }
+
+    }
+
 }
 
