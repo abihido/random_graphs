@@ -1,20 +1,22 @@
 
+import java.awt.image.BufferedImage;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 
-import static java.lang.Math.cos;
 import static java.lang.Math.random;
 
 public class Ambiente extends JFrame {
 
-
-    int x,y,N,salto,height,width;
-    int angle=0;
+    int x,y,N,height,width;
+    double angle=0;
+    double salto;
     int Ww=1800;
     int Hw=1080;
-    Boolean state=false;
+    BufferedImage bi;
+    Insets insets;
 
     private Agente[] nodos;
     ArrayList<Node> nodes;
@@ -24,10 +26,12 @@ public class Ambiente extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
-        width = 30;
-        height = 30;
+        width = 10;
+        height = 10;
         N=numeroNodos;
-        salto=360/N;
+        salto=360.0/(double)(N);
+        bi= new BufferedImage(Ww,Hw,BufferedImage.TYPE_INT_RGB);
+        insets = getInsets();
         crearGrafo(numeroNodos, probabilidadConexion);
     }
 
@@ -37,7 +41,7 @@ public class Ambiente extends JFrame {
         y= (int) ( Hw/2 + r*Math.sin(Math.toRadians(angle)));
         x= (int) (Ww/2 + r*Math.cos(Math.toRadians(angle)));
         angle = angle+salto;
-        System.out.println("x "+Integer.toString(x)+" y " +Integer.toString(y)+" a "+Integer.toString(angle));
+        System.out.println(angle);
     }
     void crearGrafo(int n, double p) {
         nodos = new Agente[n];
@@ -58,7 +62,9 @@ public class Ambiente extends JFrame {
         }
     }
 
-
+    void setAgentState(int index,Agente.estado estado){
+        nodos[index].setEstado(estado);
+    }
     class Node {
         int x, y;
         String name;
@@ -92,38 +98,101 @@ public class Ambiente extends JFrame {
     }
 
     public void paint(Graphics g) { // draw the nodes and edges
-        FontMetrics f = g.getFontMetrics();
+        //super.paint(g);
+        Graphics g1 = bi.getGraphics();
+        g1.setColor(Color.white);
+        g1.fillRect(0,0,Ww,Hw);
+        FontMetrics f = g1.getFontMetrics();
         int nodeHeight = Math.max(height, f.getHeight());
 
-        g.setColor(Color.black);
+        g1.setColor(Color.black);
         for (edge e : edges) {
-            g.drawLine(nodes.get(e.i).x, nodes.get(e.i).y,
+            g1.drawLine(nodes.get(e.i).x, nodes.get(e.i).y,
                     nodes.get(e.j).x, nodes.get(e.j).y);
         }
 
         for (Node n : nodes) {
             int nodeWidth = Math.max(width, f.stringWidth(n.name) + width / 2);
-            g.setColor(Color.white);
-            g.fillOval(n.x - nodeWidth / 2, n.y - nodeHeight / 2,
+            switch (n.model.getEstado()){
+                case Normal:
+                    g1.setColor(Color.white);break;
+                case contagiado:
+                    g1.setColor(Color.red);break;
+                case inmune:
+                    g1.setColor(Color.blue);break;
+                case inservible:
+                    g1.setColor(Color.darkGray);break;
+
+            }
+            g1.fillOval(n.x - nodeWidth / 2, n.y - nodeHeight / 2,
                     nodeWidth, nodeHeight);
-            g.setColor(Color.black);
-            g.drawOval(n.x - nodeWidth / 2, n.y - nodeHeight / 2,
+            g1.setColor(Color.black);
+            g1.drawOval(n.x - nodeWidth / 2, n.y - nodeHeight / 2,
                     nodeWidth, nodeHeight);
 
-            g.drawString(n.name, n.x - f.stringWidth(n.name) / 2,
+            g1.drawString(n.name, n.x - f.stringWidth(n.name) / 2,
                     n.y + f.getHeight() / 2);
         }
+        g.drawImage(bi,insets.left,insets.top,this);
     }
+
+    public void initProp(){
+        for(int i =0;i<N;i++){
+            nodos[i].distribucion_comunicacion_amigos();
+           // System.out.println(nodos[i].probabilidad_inservible);
+        }
+
+    }
+    public void Rutine(){
+        for(int i =0;i<N;i++){
+            nodos[i].VamosAContagiar();
+        }
+    }
+    public void Actualizar(){
+        for(int i =0;i<N;i++){
+            nodos[i].actualizarEstado();
+        }
+
+    }
+
+    public void deleteDeads(){
+        revalidate();
+        for(int u =0;u<N;u++){
+            if(nodos[u].getEstado()== Agente.estado.inservible){
+                int finalU = u;
+                edges.removeIf(e -> (e.i== finalU||e.j==finalU));
+            }
+
+
+        }
+    }
+
 }
 
 class testGraphDraw {
     //Here is some example syntax for the GraphDraw class
-    public static void main(String[] args) {
-        Ambiente frame = new Ambiente(30,0.5);
+    public static void main(String[] args) throws InterruptedException {
+        Ambiente frame = new Ambiente(100,0.2);
 
         frame.setSize(1800, 1080);
+        frame.initProp();
+        for (int i = 0; i < 10; i=i+5) {
+            frame.setAgentState(i, Agente.estado.contagiado);
+        }
 
         frame.setVisible(true);
+        for(int t=0;t<10;t++){
+            System.out.println("estamos en " + t);
+
+            frame.Rutine();
+            Thread.sleep(1000);
+            frame.Actualizar();
+            frame.deleteDeads();
+            frame.repaint();
+        }
+        System.out.println("sali");
+
+
 
     }
 }

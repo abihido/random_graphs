@@ -8,11 +8,13 @@ class Agente {
         this.antivirus = Math.random();//con 0 no tener antivirus y cercano a 1 buen antivirus
         this.usuario = Math.random();//con 0 no tener  y cercano a 1 buen antivirus
         this.firewall = Math.random();//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
-        this.estado= estado.Normal;
-        this.probabilidad_contagio=(3-antivirus*usuario-firewall*usuario-usuario)/3;
+        this.estadoActual= estado.Normal;
+        this.estadoFuturo=estado.Normal;
+        this.probabilidad_contagio=(3-antivirus-firewall-usuario)/3;
         this.probabilidad_recuperacion=(antivirus*usuario+usuario)/2;
-        this.probabilidad_inservible=1-antivirus*usuario;
+        this.probabilidad_inservible=(2-antivirus-usuario)/2;
         this.distribucion_amigos=null;
+
     }
 
     enum estado{
@@ -28,11 +30,12 @@ class Agente {
     private double antivirus;
     private double usuario ;
     private double firewall;
-    private estado estado;
+    private estado estadoActual;
+    private estado estadoFuturo;
     private double probabilidad_contagio;
     private double probabilidad_recuperacion;
-    private double probabilidad_inservible;
-    private double[] distribucion_amigos;
+    public double probabilidad_inservible;
+    public double[] distribucion_amigos;
 
 
     int numeroAmigos() {
@@ -72,34 +75,40 @@ class Agente {
     }
 
     public Agente.estado getEstado() {
-        return estado;
+        return estadoActual;
     }
 
     public void setEstado(Agente.estado estado) {
-        this.estado = estado;
+        this.estadoActual = estado;
+        this.estadoFuturo =estado;
     }
 
     public void contagiarse(){
         double p=Math.random();
         if(p<probabilidad_contagio){
-            this.estado = estado.contagiado;
+            this.estadoFuturo= estado.contagiado;
+            System.out.println("el lunes sin falta carnal");
         }
     }
     public void recuperarse(){
         double p=Math.random();
         if(p<probabilidad_recuperacion){
-            this.estado = estado.inmune;
+            this.estadoFuturo = estado.inmune;
         }
     }
     public void inservible(){
         double p=Math.random();
         if(p<probabilidad_inservible){
-            this.estado = estado.inservible;
+            this.estadoFuturo = estado.inservible;
+            System.out.print("me voy a morir xd");
+            System.out.println(p);
         }
     }
 
     public void distribucion_comunicacion_amigos(){
+        distribucion_amigos= new double[numeroAmigos()];
         double distribucion_acumulada=0;
+        /*
         for(int i=0;i<numeroAmigos();i++){
             double p=Math.random();
 
@@ -112,19 +121,25 @@ class Agente {
 
             }
             else{
-                while(distribucion_acumulada<p){
-                    p=Math.random();
-                }
-                distribucion_amigos[i]=p;
+
+                distribucion_amigos[i]=p*distribucion_acumulada;
                 distribucion_acumulada=distribucion_acumulada-p;
             }
+        }*/
+        for(int i=0;i<numeroAmigos();i++){
+            double p=Math.random();
+            distribucion_amigos[i]=p*0.5;
         }
     }
+    public void actualizarEstado(){
+        estadoActual=estadoFuturo;
+    }
     public void VamosAContagiar(){
+
         Agente[] amigos_arr=new Agente[numeroAmigos()];
         amigos_arr= amigos.toArray(amigos_arr);
-        distribucion_comunicacion_amigos();
-        if(this.estado==estado.contagiado){
+       // distribucion_comunicacion_amigos();
+        if(this.estadoActual==estado.contagiado){
             double p=Math.random();
             for(int i=0;i<numeroAmigos();i++){
                 if(p<this.distribucion_amigos[i] && amigos_arr[i].getEstado()==estado.Normal){
