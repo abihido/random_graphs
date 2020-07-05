@@ -9,6 +9,7 @@ import static java.lang.Math.random;
 
 public class Ambiente extends JFrame {
 
+
     int x,y,N,salto,height,width;
     int angle=0;
     int Ww=1800;
