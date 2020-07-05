@@ -4,41 +4,71 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Ambiente extends JFrame {
-    int width;
-    int height;
+import static java.lang.Math.cos;
+import static java.lang.Math.random;
 
+public class Ambiente extends JFrame {
+
+
+    int x,y,N,salto,height,width;
+    int angle=0;
+    int Ww=1800;
+    int Hw=1080;
+    Boolean state=false;
+
+    private Agente[] nodos;
     ArrayList<Node> nodes;
     ArrayList<edge> edges;
 
-    public void tick() {
-    }
-
-    public Ambiente() { //Constructor
+    public Ambiente(int numeroNodos,Double probabilidadConexion) { //Constructor
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
         width = 30;
         height = 30;
+        N=numeroNodos;
+        salto=360/N;
+        crearGrafo(numeroNodos, probabilidadConexion);
     }
 
-    public Ambiente(String name) { //Construct with label
-        this.setTitle(name);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        nodes = new ArrayList<>();
-        edges = new ArrayList<>();
-        width = 30;
-        height = 30;
+    void getYXC(){
+
+        int r= (Hw-200)/2;
+        y= (int) ( Hw/2 + r*Math.sin(Math.toRadians(angle)));
+        x= (int) (Ww/2 + r*Math.cos(Math.toRadians(angle)));
+        angle = angle+salto;
+        System.out.println("x "+Integer.toString(x)+" y " +Integer.toString(y)+" a "+Integer.toString(angle));
     }
+    void crearGrafo(int n, double p) {
+        nodos = new Agente[n];
+        nodos[0]=new Agente();
+        getYXC();
+        addNode(Integer.toString(0),x,y,nodos[0]);
+        for (int i = 1; i < n; i++) {
+            nodos[i]=new Agente();
+            getYXC();
+            addNode(Integer.toString(i),x,y,nodos[i]);
+            for (int j = 0; j < i; j++) {
+                if (random() < p) {
+                    nodos[i].nuevoAmigo(nodos[j]);
+                    nodos[j].nuevoAmigo(nodos[i]);
+                    addEdge(i,j);
+                }
+            }
+        }
+    }
+
 
     class Node {
         int x, y;
         String name;
+        Agente model;
 
-        public Node(String myName, int myX, int myY) {
+        public Node(String myName, int myX, int myY,Agente ag) {
             x = myX;
             y = myY;
             name = myName;
+            model = ag;
         }
     }
 
@@ -51,16 +81,14 @@ public class Ambiente extends JFrame {
         }
     }
 
-    public void addNode(String name, int x, int y) {
+    public void addNode(String name, int x, int y,Agente modelo) {
         //add a node at pixel (x,y)
-        nodes.add(new Node(name, x, y));
-        this.repaint();
+        nodes.add(new Node(name, x, y, modelo));
     }
 
     public void addEdge(int i, int j) {
         //add an edge between nodes i and j
         edges.add(new edge(i, j));
-        this.repaint();
     }
 
     public void paint(Graphics g) { // draw the nodes and edges
@@ -91,17 +119,12 @@ public class Ambiente extends JFrame {
 class testGraphDraw {
     //Here is some example syntax for the GraphDraw class
     public static void main(String[] args) {
-        Ambiente frame = new Ambiente("Test Window");
+        Ambiente frame = new Ambiente(30,0.5);
 
-        frame.setSize(400, 300);
+        frame.setSize(1800, 1080);
 
         frame.setVisible(true);
 
-        frame.addNode("a", 50, 50);
-        frame.addNode("b", 100, 100);
-        frame.addNode("longNode", 200, 200);
-        frame.addEdge(0, 1);
-        frame.addEdge(0, 2);
     }
 }
 
