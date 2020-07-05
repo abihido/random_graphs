@@ -50,7 +50,7 @@ class Observador {
 		for (int i = 0; i < contagioPorAmigos.length; i++) {
 			double temp = contagioPorAmigos[i] / (double)contagioPorAmigos.length;
 			formatter.format(
-					"Porcentaje de contagio por %1$3d amigo/s: %2$3f",
+					"Porcentaje de contagio por %3d amigo/s: %2$3f",
 					i, temp
 			);
 		}
