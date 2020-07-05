@@ -3,16 +3,16 @@ import java.util.List;
 
 class Agente {
 
-    Agente() {
+    Agente(double a_firewall, double b_firewall,double a_antiv, double b_antiv,double a_usuario, double b_usuario) {
         this.amigos = new ArrayList<Agente>();
-        this.antivirus = Math.random();//con 0 no tener antivirus y cercano a 1 buen antivirus
-        this.usuario = Math.random();//con 0 no tener  y cercano a 1 buen antivirus
-        this.firewall = Math.random();//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
+        this.antivirus = Math.random()*(b_antiv-a_antiv)+a_antiv;//con 0 no tener antivirus y cercano a 1 buen antivirus
+        this.usuario = Math.random()*(b_usuario-a_usuario)+a_usuario;//con 0 no tener  y cercano a 1 buen antivirus
+        this.firewall = Math.random()*(b_firewall-a_firewall)+a_firewall;//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
         this.estadoActual= estado.Normal;
         this.estadoFuturo=estado.Normal;
-        this.probabilidad_contagio=(3-antivirus-firewall-usuario)/3;
+        this.probabilidad_contagio=(3-antivirus*usuario-firewall*usuario-usuario)/3;
         this.probabilidad_recuperacion=(antivirus*usuario+usuario)/2;
-        this.probabilidad_inservible=(2-antivirus-usuario)/2;
+        this.probabilidad_inservible=1-antivirus*usuario;
         this.distribucion_amigos=null;
 
     }
@@ -136,14 +136,12 @@ class Agente {
     }
     public void VamosAContagiar(){
 
-        Agente[] amigos_arr=new Agente[numeroAmigos()];
-        amigos_arr= amigos.toArray(amigos_arr);
        // distribucion_comunicacion_amigos();
         if(this.estadoActual==estado.contagiado){
             double p=Math.random();
             for(int i=0;i<numeroAmigos();i++){
-                if(p<this.distribucion_amigos[i] && amigos_arr[i].getEstado()==estado.Normal){
-                    amigos_arr[i].contagiarse();
+                if(p<this.distribucion_amigos[i] && amigos.get(i).getEstado()==estado.Normal){
+                    amigos.get(i).contagiarse();
                 }
             }
             recuperarse();
