@@ -30,7 +30,7 @@ class Observador {
 
 	private void createPieChar(int width, int height) {
 		DefaultPieDataset pieDataset = new DefaultPieDataset();
-		Integer[] contagioArray = contagioPorTick.toArray(new Integer[numNodos]);
+		Integer[] contagioArray = contagioPorTick.toArray(new Integer[tick]);
 		for (int i = 0; i < contagioPorTick.size(); i++) {
 			pieDataset.setValue("turno " + i, new Double(contagioArray[i]));
 		}
@@ -107,8 +107,9 @@ class Observador {
 		for (int i = 0; i < numNodos; i++) {
 			formatter.format("Contagiados dados %3d amigos: %3d \n", i, contagioPorAmigos[i]);
 		}
+		Integer[] contagioArray = contagioPorTick.toArray(new Integer[tick]);
 		for (int i = 0; i < tick; i++) {
-			formatter.format("Contagios en el %3d tick: %3d \n", i, (contagioPorTick.toArray())[i]);
+			formatter.format("Contagios en el %3d tick: %3d \n", i, contagioArray[i]);
 		}
 		for (int i = 0; i < numNodos; i++) {
 			double temp = contagioPorAmigos[i] / (double) numNodos;
