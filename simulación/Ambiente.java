@@ -39,6 +39,7 @@ public class Ambiente extends JFrame {
         bi= new BufferedImage(Ww,Hw,BufferedImage.TYPE_INT_RGB);
         insets = getInsets();
         crearGrafo(numeroNodos, probabilidadConexion);
+
     }
     void setT(int x){
         this.t=x;
@@ -51,6 +52,7 @@ public class Ambiente extends JFrame {
         angle = angle+salto;
         System.out.println(angle);
     }
+
     void crearGrafo(int n, double p) {
         nodos = new Agente[n];
         nodos[0]=new Agente(a_firewall,b_firewall,a_antiv,b_antiv, a_usuario, b_usuario);
@@ -214,10 +216,16 @@ public class Ambiente extends JFrame {
 
 }
 
+
+
 class testGraphDraw {
     //Here is some example syntax for the GraphDraw class
     public static void main(String[] args) throws InterruptedException {
-        Ambiente frame = new Ambiente(300,0.1,0.4,0.6,0,1,0,1);
+
+
+
+
+        Ambiente frame = new Ambiente(300,0.01,0.9,1,0,1,0.8,1);
 
         frame.setSize(1800, 1080);
         frame.initProp();
@@ -230,7 +238,7 @@ class testGraphDraw {
 
             frame.setT(t);
             frame.Rutine();
-            Thread.sleep(1000);
+            Thread.sleep(2000);
             frame.Actualizar();
             frame.deleteDeads();
             frame.repaint();
