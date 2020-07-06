@@ -1,3 +1,5 @@
+import org.apache.commons.collections.Bag;
+import org.apache.commons.collections.bag.HashBag;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -9,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Formatter;
+import java.util.Set;
 
 class Observador {
 
@@ -17,6 +20,7 @@ class Observador {
 	private int tick;
 	private ArrayDeque<Integer> contagioPorTick;
 	private int numNodos;
+	private Bag porcentajeAmigosContagiados;
 	JFreeChart barChart;
 
 	Observador(int numeroNodos) {
@@ -25,6 +29,7 @@ class Observador {
 		contagioPorTick = new ArrayDeque<>();
 		numeroContagiados = 0;
 		numNodos = numeroNodos;
+		porcentajeAmigosContagiados = new HashBag();
 	}
 
 	public void estadisticas() {
@@ -34,6 +39,7 @@ class Observador {
 
 		createBarChar(width, height);
 		createPieChar(width, height);
+		createInfectedFriendsChar(width, height);
 	}
 
 	private void createPieChar(int width, int height) {
@@ -52,7 +58,7 @@ class Observador {
 		);
 		File PieChart = new File("PieChart.jpeg");
 		try {
-			ChartUtils.saveChartAsJPEG(PieChart, pieChart, width, height );
+			ChartUtils.saveChartAsJPEG(PieChart, pieChart, width, height);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -82,15 +88,40 @@ class Observador {
 		}
 	}
 
+	void createInfectedFriendsChar(int width, int height) {
+		DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
+		Set<Double> valoresUnicos = porcentajeAmigosContagiados.uniqueSet();
+		for (Double valor : valoresUnicos) {
+			barDataset.addValue(valor, Integer.valueOf (porcentajeAmigosContagiados.getCount(valor)), "valores");
+		}
+		JFreeChart barChart = ChartFactory.createBarChart(
+				"numero de cosas(?)",
+				"numero repeticiones",
+				"amigos contagiados / # amigos",
+				barDataset, PlotOrientation.VERTICAL,
+				true, true, false
+		);
+		File BarChart = new File("relacionAmigosContagiados.jpeg");
+		try {
+			ChartUtils.saveChartAsJPEG(BarChart, barChart, width, height);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void updateTick() {
 		tick++;
 		contagioPorTick.add(0);
 	}
 
-	public void updateContagio(int numeroConexiones) {
+	public void updateContagio(
+			int numeroConexiones,
+			int numeroConexionesContagiadas
+	) {
 		contagioPorAmigos[numeroConexiones]++;
 		contagioPorTick.addLast(contagioPorTick.removeLast() + 1);
 		numeroContagiados++;
+		porcentajeAmigosContagiados.add(numeroConexionesContagiadas / (double) numeroConexiones);
 	}
 
 	private double contagioPorTurno() {
