@@ -3,7 +3,7 @@ import java.util.List;
 
 class Agente {
 
-    Agente(double a_firewall, double b_firewall,double a_antiv, double b_antiv,double a_usuario, double b_usuario) {
+    Agente(double a_firewall, double b_firewall,double a_antiv, double b_antiv,double a_usuario, double b_usuario, double recontagio) {
         this.amigos = new ArrayList<>();
         this.antivirus = Math.random()*(b_antiv-a_antiv)+a_antiv;//con 0 no tener antivirus y cercano a 1 buen antivirus
         this.usuario = Math.random()*(b_usuario-a_usuario)+a_usuario;//con 0 no tener  y cercano a 1 buen antivirus
@@ -14,6 +14,7 @@ class Agente {
         this.probabilidad_recuperacion=(antivirus*usuario+usuario)/2;
         this.probabilidad_inservible=1-antivirus*usuario;
         this.distribucion_amigos=null;
+        this.probabilidad_recontagio=recontagio;
 
     }
 
@@ -34,6 +35,7 @@ class Agente {
     private estado estadoFuturo;
     private double probabilidad_contagio;
     private double probabilidad_recuperacion;
+    private double probabilidad_recontagio;
     public double probabilidad_inservible;
     public double[] distribucion_amigos;
 
@@ -94,7 +96,13 @@ class Agente {
     public void recuperarse(){
         double p=Math.random();
         if(p<probabilidad_recuperacion){
-            this.estadoFuturo = estado.inmune;
+            p=Math.random();
+            if(p<probabilidad_recontagio) {
+                this.estadoFuturo = estado.inmune;
+            }
+            else{
+                this.estadoFuturo= estado.Normal;
+            }
         }
     }
     public void inservible(){

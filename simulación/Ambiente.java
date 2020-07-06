@@ -4,15 +4,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import static java.lang.Math.max;
 import static java.lang.Math.random;
 
 public class Ambiente extends JFrame {
 
 	int x, y, N, height, width, t, sanos, contagiados, recuperados, muertos;
 	double angle = 0;
-	double salto, a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario;
+	double salto, a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario,recontagio;
 	int Ww = 1800;
 	int Hw = 1080;
+
+	int  adyacensia[][] ;
+
+	private Boolean act=true;
 	BufferedImage bi;
 	Insets insets;
 	Observador observador;
@@ -27,6 +32,7 @@ public class Ambiente extends JFrame {
 			double a_firewall, double b_firewall,
 			double a_antiv, double b_antiv,
 			double a_usuario, double b_usuario,
+			double recontagio,
 			Observador observador
 	) { //Constructor
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,16 +46,25 @@ public class Ambiente extends JFrame {
 		this.b_antiv = b_antiv;
 		this.a_usuario = a_usuario;
 		this.b_usuario = b_usuario;
+		this.recontagio=recontagio;
 		N = numeroNodos;
 		salto = 360.0 / (double) (N);
 		bi = new BufferedImage(Ww, Hw, BufferedImage.TYPE_INT_RGB);
 		insets = getInsets();
+		adyacensia = new int [N][N];
 		crearGrafo(numeroNodos, probabilidadConexion);
 		this.observador = observador;
 	}
 
 	void setT(int x) {
 		this.t = x;
+	}
+	public Boolean getAct() {
+		return act;
+	}
+
+	public void setAct(Boolean act) {
+		this.act = act;
 	}
 
 	void getYXC() {
@@ -63,17 +78,18 @@ public class Ambiente extends JFrame {
 
 	void crearGrafo(int n, double p) {
 		nodos = new Agente[n];
-		nodos[0] = new Agente(a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario);
+		nodos[0] = new Agente(a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario,recontagio);
 		getYXC();
 		addNode(Integer.toString(0), x, y, nodos[0]);
 		for (int i = 1; i < n; i++) {
-			nodos[i] = new Agente(a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario);
+			nodos[i] = new Agente(a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario,recontagio);
 			getYXC();
 			addNode(Integer.toString(i), x, y, nodos[i]);
 			for (int j = 0; j < i; j++) {
 				if (random() < p) {
 					nodos[i].nuevoAmigo(nodos[j]);
 					nodos[j].nuevoAmigo(nodos[i]);
+					adyacensia[i][j]=1;
 					addEdge(i, j);
 				}
 			}
@@ -217,6 +233,10 @@ public class Ambiente extends JFrame {
 		for (Agente nodo : nodos) {
 			Agente.estado viejo = nodo.getEstado();
 			nodo.actualizarEstado();
+			Agente.estado nuevo = nodo.getEstado();
+			if(viejo != nuevo){
+				act=true;
+			}
 			if (viejo == Agente.estado.Normal) {
 				if (nodo.getEstado() == Agente.estado.contagiado) {
 					observador.updateContagio(nodo.numeroAmigos());
@@ -243,32 +263,36 @@ public class Ambiente extends JFrame {
 class testGraphDraw {
 	//Here is some example syntax for the GraphDraw class
 	public static void main(String[] args) throws InterruptedException {
-		final int numeroNodos = 300;
+		final int numeroNodos = 100;
+		final int contagiados_iniciales = 3;
 		Observador espia = new Observador(numeroNodos);
 		Ambiente frame = new Ambiente(
 				numeroNodos,
-				0.1,
+				0.3,
 				0.4, 0.6,
 				0, 1,
-				0, 1,
+				0, 1,0.2,
 				espia
 		);
 
 		frame.setSize(1800, 1080);
 		frame.initProp();
-		for (int i = 0; i < 100; i = i + 5) {
-			frame.setAgentState(i, Agente.estado.contagiado);
+		for (int i = 0; i < contagiados_iniciales; i++) {
+			frame.setAgentState((int)(Math.random()*numeroNodos), Agente.estado.contagiado);
 		}
 
 		frame.setVisible(true);
-		for (int t = 0; t < 20; t++) {
+		int t =0;
+		while(frame.getAct()){
 
 			frame.setT(t);
+			frame.setAct(false);
 			frame.Rutine();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			frame.Actualizar();
 			frame.deleteDeads();
 			frame.repaint();
+			t++;
 		}
 		System.out.println("sali");
 		espia.estadisticas();
