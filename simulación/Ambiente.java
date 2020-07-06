@@ -225,11 +225,11 @@ class testGraphDraw {
 
 
 
-        Ambiente frame = new Ambiente(300,0.01,0.9,1,0,1,0.8,1);
+        Ambiente frame = new Ambiente(30,0.01,0.9,1,0,1,0.8,1);
 
         frame.setSize(1800, 1080);
         frame.initProp();
-        for (int i = 0; i < 100; i=i+5) {
+        for (int i = 0; i < 10; i=i+5) {
             frame.setAgentState(i, Agente.estado.contagiado);
         }
 
