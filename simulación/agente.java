@@ -87,7 +87,8 @@ class Agente {
         double p=Math.random();
         if(p<probabilidad_contagio){
             this.estadoFuturo= estado.contagiado;
-            System.out.println("el lunes sin falta carnal");
+          //  System.out.println("el lunes sin falta carnal");
+            System.out.println(probabilidad_contagio);
         }
     }
     public void recuperarse(){
@@ -100,8 +101,8 @@ class Agente {
         double p=Math.random();
         if(p<probabilidad_inservible){
             this.estadoFuturo = estado.inservible;
-            System.out.print("me voy a morir xd");
-            System.out.println(p);
+          //  System.out.print("me voy a morir xd");
+         //   System.out.println(p);
         }
     }
 
