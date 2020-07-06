@@ -19,6 +19,14 @@ class Observador {
 	private int numNodos;
 	JFreeChart barChart;
 
+	Observador(int numeroNodos) {
+		contagioPorAmigos = new int[numeroNodos];
+		tick = 0;
+		contagioPorTick = new ArrayDeque<>();
+		numeroContagiados = 0;
+		numNodos = numeroNodos;
+	}
+
 	public void estadisticas() {
 
 		final int width = 640;    /* Width of the image */
@@ -71,14 +79,6 @@ class Observador {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	Observador(int numeroNodos) {
-		contagioPorAmigos = new int[numeroNodos];
-		tick = 0;
-		contagioPorTick = new ArrayDeque<>();
-		numeroContagiados = 0;
-		numNodos = numeroNodos;
 	}
 
 	public void updateTick() {
