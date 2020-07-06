@@ -239,7 +239,13 @@ public class Ambiente extends JFrame {
 			}
 			if (viejo == Agente.estado.Normal) {
 				if (nodo.getEstado() == Agente.estado.contagiado) {
-					observador.updateContagio(nodo.numeroAmigos());
+					int numeroAmigosContagiados = 0;
+					for(Agente ag : nodo.getAmigos()) {
+						if (ag.getEstado() == Agente.estado.contagiado) {
+							numeroAmigosContagiados++;
+						}
+					}
+					observador.updateContagio(nodo.numeroAmigos(), numeroAmigosContagiados);
 				}
 			}
 		}
