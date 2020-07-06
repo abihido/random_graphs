@@ -4,7 +4,7 @@ import java.util.List;
 class Agente {
 
     Agente(double a_firewall, double b_firewall,double a_antiv, double b_antiv,double a_usuario, double b_usuario) {
-        this.amigos = new ArrayList<Agente>();
+        this.amigos = new ArrayList<>();
         this.antivirus = Math.random()*(b_antiv-a_antiv)+a_antiv;//con 0 no tener antivirus y cercano a 1 buen antivirus
         this.usuario = Math.random()*(b_usuario-a_usuario)+a_usuario;//con 0 no tener  y cercano a 1 buen antivirus
         this.firewall = Math.random()*(b_firewall-a_firewall)+a_firewall;//con 0 deja pasar casi todo_  y cercano a 1 es mas estricto
@@ -38,41 +38,41 @@ class Agente {
     public double[] distribucion_amigos;
 
 
-    int numeroAmigos() {
-        return amigos.size();
-    }
+	int numeroAmigos() {
+		return amigos.size();
+	}
 
-    public List<Agente> getAmigos() {
-        return amigos;
-    }
+	public List<Agente> getAmigos() {
+		return amigos;
+	}
 
-    public void setAmigos(List<Agente> amigos) {
-        this.amigos = amigos;
-    }
+	public void setAmigos(List<Agente> amigos) {
+		this.amigos = amigos;
+	}
 
-    public double getAntivirus() {
-        return antivirus;
-    }
+	public double getAntivirus() {
+		return antivirus;
+	}
 
-    public void setAntivirus(double antivirus) {
-        this.antivirus = antivirus;
-    }
+	public void setAntivirus(double antivirus) {
+		this.antivirus = antivirus;
+	}
 
-    public double getUsuario() {
-        return usuario;
-    }
+	public double getUsuario() {
+		return usuario;
+	}
 
-    public void setUsuario(double usuario) {
-        this.usuario = usuario;
-    }
+	public void setUsuario(double usuario) {
+		this.usuario = usuario;
+	}
 
-    public double getFirewall() {
-        return firewall;
-    }
+	public double getFirewall() {
+		return firewall;
+	}
 
-    public void setFirewall(double firewall) {
-        this.firewall = firewall;
-    }
+	public void setFirewall(double firewall) {
+		this.firewall = firewall;
+	}
 
     public Agente.estado getEstado() {
         return estadoActual;
@@ -149,7 +149,7 @@ class Agente {
             inservible();
         }
 
-    }
+	}
 
 }
 
