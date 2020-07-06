@@ -216,6 +216,7 @@ public class Ambiente extends JFrame {
 	}
 
 	public void Actualizar() {
+		observador.updateTick();
 		for (Agente nodo : nodos) {
 			Agente.estado viejo = nodo.getEstado();
 			nodo.actualizarEstado();
@@ -273,8 +274,8 @@ class testGraphDraw {
 			frame.repaint();
 		}
 		System.out.println("sali");
-
-
+		espia.estadisticas();
+		System.out.println("estadisticas listas");
 	}
 }
 

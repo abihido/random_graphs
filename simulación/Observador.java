@@ -29,8 +29,8 @@ class Observador {
 
 	public void estadisticas() {
 
-		final int width = 640;    /* Width of the image */
-		final int height = 480;   /* Height of the image */
+		final int width = 1080;    /* Width of the image */
+		final int height = 960;   /* Height of the image */
 
 		createBarChar(width, height);
 		createPieChar(width, height);
@@ -61,6 +61,7 @@ class Observador {
 	private void createBarChar(int width, int height) {
 		DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
 		for (int i = 0; i < numNodos; i++) {
+			if (contagioPorAmigos[i] == 0) continue;
 			barDataset.addValue(
 					contagioPorAmigos[i] / (double) numNodos,
 					"Porcentaje",
@@ -69,7 +70,7 @@ class Observador {
 		}
 		barChart = ChartFactory.createBarChart(
 				"% Contagio por # conexiones",
-				"Category", "Score",
+				"Category", "Probabilidad Contagio",
 				barDataset, PlotOrientation.VERTICAL,
 				true, true, false
 		);
