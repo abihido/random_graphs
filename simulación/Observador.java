@@ -63,7 +63,7 @@ class Observador {
 		for (int i = 0; i < numNodos; i++) {
 			if (contagioPorAmigos[i] == 0) continue;
 			barDataset.addValue(
-					contagioPorAmigos[i] / (double) numNodos,
+					(contagioPorAmigos[i] / (double) numNodos) * 100,
 					"Porcentaje",
 					String.valueOf(i)
 			);
