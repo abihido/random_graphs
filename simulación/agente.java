@@ -90,7 +90,6 @@ class Agente {
         if(p<probabilidad_contagio){
             this.estadoFuturo= estado.contagiado;
           //  System.out.println("el lunes sin falta carnal");
-            System.out.println(probabilidad_contagio);
         }
     }
     public void recuperarse(){
