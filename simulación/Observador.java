@@ -22,6 +22,8 @@ class Observador {
 	private int numNodos;
 	private Bag porcentajeAmigosContagiados;
 	JFreeChart barChart;
+	static int Contador = 0;
+	private int id;
 
 	Observador(int numeroNodos) {
 		contagioPorAmigos = new int[numeroNodos];
@@ -30,10 +32,10 @@ class Observador {
 		numeroContagiados = 0;
 		numNodos = numeroNodos;
 		porcentajeAmigosContagiados = new HashBag();
+		id = Contador++;
 	}
 
 	public void estadisticas() {
-
 		final int width = 1080;    /* Width of the image */
 		final int height = 960;   /* Height of the image */
 
@@ -56,7 +58,7 @@ class Observador {
 				true,
 				false
 		);
-		File PieChart = new File("PieChart.jpeg");
+		File PieChart = new File("PieChart" + id + ".jpeg");
 		try {
 			ChartUtils.saveChartAsJPEG(PieChart, pieChart, width, height);
 		} catch (Exception e) {
@@ -80,7 +82,7 @@ class Observador {
 				barDataset, PlotOrientation.VERTICAL,
 				true, true, false
 		);
-		File BarChart = new File("BarChart.jpeg");
+		File BarChart = new File("BarChart" + id + ".jpeg");
 		try {
 			ChartUtils.saveChartAsJPEG(BarChart, barChart, width, height);
 		} catch (IOException e) {
@@ -95,13 +97,13 @@ class Observador {
 			barDataset.addValue(valor, Integer.valueOf(porcentajeAmigosContagiados.getCount(valor)), "valores");
 		}
 		JFreeChart barChart = ChartFactory.createBarChart(
-				"numero de cosas(?)",
+				"numero de vece que se presenta (amigos cont / # amigos)",
 				"numero repeticiones",
 				"amigos contagiados / # amigos",
 				barDataset, PlotOrientation.VERTICAL,
 				true, true, false
 		);
-		File BarChart = new File("relacionAmigosContagiados.jpeg");
+		File BarChart = new File("relacionAmigosContagiados" + id +".jpeg");
 		try {
 			ChartUtils.saveChartAsJPEG(BarChart, barChart, width, height);
 		} catch (Exception e) {
