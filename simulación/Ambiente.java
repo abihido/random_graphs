@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static java.lang.Math.max;
 import static java.lang.Math.random;
 
 public class Ambiente extends JFrame {
@@ -17,7 +16,7 @@ public class Ambiente extends JFrame {
 	int Ww = 1800;
 	int Hw = 1080;
 
-	int  adyacensia[][] ;
+	int[][] adyacensia;
 
 	private Boolean act=true;
 	BufferedImage bi;
@@ -282,7 +281,7 @@ public class Ambiente extends JFrame {
 			if (viejo == Agente.estado.Normal) {
 				if (nodo.getEstado() == Agente.estado.contagiado) {
 					int numeroAmigosContagiados = 0;
-					for(Agente ag : nodo.getAmigos()) {
+					for (Agente ag : nodo.getAmigos()) {
 						if (ag.getEstado() == Agente.estado.contagiado) {
 							numeroAmigosContagiados++;
 						}

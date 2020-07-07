@@ -76,14 +76,14 @@ class Agente {
 		this.firewall = firewall;
 	}
 
-    public Agente.estado getEstado() {
-        return estadoActual;
-    }
+	public Agente.estado getEstado() {
+		return estadoActual;
+	}
 
-    public void setEstado(Agente.estado estado) {
-        this.estadoActual = estado;
-        this.estadoFuturo =estado;
-    }
+	public void setEstado(Agente.estado estado) {
+		this.estadoActual = estado;
+		this.estadoFuturo = estado;
+	}
 
     public void contagiarse(){
         double p=Math.random();
@@ -113,9 +113,9 @@ class Agente {
         }
     }
 
-    public void distribucion_comunicacion_amigos(){
-        distribucion_amigos= new double[numeroAmigos()];
-        double distribucion_acumulada=0;
+	public void distribucion_comunicacion_amigos() {
+		distribucion_amigos = new double[numeroAmigos()];
+		double distribucion_acumulada = 0;
         /*
         for(int i=0;i<numeroAmigos();i++){
             double p=Math.random();
@@ -134,27 +134,29 @@ class Agente {
                 distribucion_acumulada=distribucion_acumulada-p;
             }
         }*/
-        for(int i=0;i<numeroAmigos();i++){
-            double p=Math.random();
-            distribucion_amigos[i]=p*0.5;
-        }
-    }
-    public void actualizarEstado(){
-        estadoActual=estadoFuturo;
-    }
-    public void VamosAContagiar(){
+		for (int i = 0; i < numeroAmigos(); i++) {
+			double p = Math.random();
+			distribucion_amigos[i] = p * 0.5;
+		}
+	}
 
-       // distribucion_comunicacion_amigos();
-        if(this.estadoActual==estado.contagiado){
-            double p=Math.random();
-            for(int i=0;i<numeroAmigos();i++){
-                if(p<this.distribucion_amigos[i] && amigos.get(i).getEstado()==estado.Normal){
-                    amigos.get(i).contagiarse();
-                }
-            }
-            recuperarse();
-            inservible();
-        }
+	public void actualizarEstado() {
+		estadoActual = estadoFuturo;
+	}
+
+	public void VamosAContagiar() {
+
+		// distribucion_comunicacion_amigos();
+		if (this.estadoActual == estado.contagiado) {
+			double p = Math.random();
+			for (int i = 0; i < numeroAmigos(); i++) {
+				if (p < this.distribucion_amigos[i] && amigos.get(i).getEstado() == estado.Normal) {
+					amigos.get(i).contagiarse();
+				}
+			}
+			recuperarse();
+			inservible();
+		}
 
 	}
 

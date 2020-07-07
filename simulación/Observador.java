@@ -92,7 +92,7 @@ class Observador {
 		DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
 		Set<Double> valoresUnicos = porcentajeAmigosContagiados.uniqueSet();
 		for (Double valor : valoresUnicos) {
-			barDataset.addValue(valor, Integer.valueOf (porcentajeAmigosContagiados.getCount(valor)), "valores");
+			barDataset.addValue(valor, Integer.valueOf(porcentajeAmigosContagiados.getCount(valor)), "valores");
 		}
 		JFreeChart barChart = ChartFactory.createBarChart(
 				"numero de cosas(?)",
