@@ -275,7 +275,7 @@ public class Ambiente extends JFrame {
 			Agente.estado viejo = nodo.getEstado();
 			nodo.actualizarEstado();
 			Agente.estado nuevo = nodo.getEstado();
-			if(viejo != nuevo){
+			if(viejo != nuevo || viejo== Agente.estado.contagiado){
 				act=true;
 			}
 			if (viejo == Agente.estado.Normal) {
