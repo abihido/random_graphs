@@ -307,12 +307,12 @@ public class Ambiente extends JFrame {
 
 }
 
-class testGraphDraw {
+class MainSimulation {
 	//Here is some example syntax for the GraphDraw class
 	public static void main(String[] args) throws InterruptedException {
 		final int numeroNodos = 100;
 		final int contagiados_iniciales = 10;
-		Observador espia = new Observador(numeroNodos);
+		Observador espia = new Observador(numeroNodos,"2",0);
 		Ambiente frame = new Ambiente(
 				numeroNodos,
 				0.9,

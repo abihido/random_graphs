@@ -17,8 +17,13 @@ class Observador {
 
 	private int numeroContagiados;
 	private int[] contagioPorAmigos;
+
+	public void setTick(int tick) {
+		this.tick = tick;
+	}
+
 	private int tick;
-	public ArrayDeque<Integer> contagioPorTick;
+	public int[] contagioPorTick;
 	private int numNodos;
 	private Bag porcentajeAmigosContagiados;
 	JFreeChart barChart;
@@ -26,10 +31,10 @@ class Observador {
 	private int id;
 	public String nombreCaso;
 
-	Observador(int numeroNodos, String nombreCaso) {
+	Observador(int numeroNodos, String nombreCaso, int ticks) {
 		contagioPorAmigos = new int[numeroNodos];
 		tick = 0;
-		contagioPorTick = new ArrayDeque<>();
+		contagioPorTick = new int[ticks];
 		numeroContagiados = 0;
 		numNodos = numeroNodos;
 		porcentajeAmigosContagiados = new HashBag();
@@ -42,7 +47,7 @@ class Observador {
 		for (Observador obs : observadores) {
 			for (int i = 0; i < obs.tick; i++) {
 				barDataset.addValue(
-						(obs.contagioPorTick.toArray(new Integer[obs.tick]))[i],
+						(obs.contagioPorTick[i]),
 						obs.nombreCaso,
 						String.valueOf(i)
 				);
@@ -73,15 +78,14 @@ class Observador {
 
 	private void createPieChar(int width, int height) {
 		DefaultPieDataset pieDataset = new DefaultPieDataset();
-		Integer[] contagioArray = contagioPorTick.toArray(new Integer[tick]);
-		for (int i = 0; i < contagioPorTick.size(); i++) {
-			pieDataset.setValue("turno " + i, new Double(contagioArray[i]));
+		for (int i = 0; i < contagioPorTick.length; i++) {
+			pieDataset.setValue("turno " + i, new Double(contagioPorTick[i]));
 		}
 
 		JFreeChart pieChart = ChartFactory.createPieChart(
 				"Infectados por turno",   // chart title
 				pieDataset,          // data
-				true,             // include legend
+				false,             // include legend
 				true,
 				false
 		);
@@ -140,7 +144,6 @@ class Observador {
 
 	public void updateTick() {
 		tick++;
-		contagioPorTick.add(0);
 	}
 
 	public void updateContagio(
@@ -148,7 +151,7 @@ class Observador {
 			int numeroConexionesContagiadas
 	) {
 		contagioPorAmigos[numeroConexiones]++;
-		contagioPorTick.addLast(contagioPorTick.removeLast() + 1);
+		contagioPorTick[tick]++;
 		numeroContagiados++;
 		porcentajeAmigosContagiados.add(numeroConexionesContagiadas / (double) numeroConexiones);
 	}
@@ -167,9 +170,8 @@ class Observador {
 		for (int i = 0; i < numNodos; i++) {
 			formatter.format("Contagiados dados %3d amigos: %3d \n", i, contagioPorAmigos[i]);
 		}
-		Integer[] contagioArray = contagioPorTick.toArray(new Integer[tick]);
 		for (int i = 0; i < tick; i++) {
-			formatter.format("Contagios en el %3d tick: %3d \n", i, contagioArray[i]);
+			formatter.format("Contagios en el %3d tick: %3d \n", i, contagioPorTick[i]);
 		}
 		for (int i = 0; i < numNodos; i++) {
 			double temp = contagioPorAmigos[i] / (double) numNodos;
