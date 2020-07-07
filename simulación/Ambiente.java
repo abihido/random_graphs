@@ -3,12 +3,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.lang.Math.random;
 
 public class Ambiente extends JFrame {
 
 	int x, y, N, height, width, t, sanos, contagiados, recuperados, muertos;
+	int times[]= new int [5];
 	double angle = 0;
 	double salto, a_firewall, b_firewall, a_antiv, b_antiv, a_usuario, b_usuario,recontagio;
 	int Ww = 1800;
@@ -72,7 +74,6 @@ public class Ambiente extends JFrame {
 		y = (int) (Hw / 2 + r * Math.sin(Math.toRadians(angle)));
 		x = (int) (Ww / 2 + r * Math.cos(Math.toRadians(angle)));
 		angle = angle + salto;
-		System.out.println(angle);
 	}
 
 	void crearGrafo(int n, double p) {
@@ -201,6 +202,47 @@ public class Ambiente extends JFrame {
 		g1.setColor(Color.darkGray);
 		j = f2.stringWidth("Inutilizables = " + muertos);
 		g1.drawString("Inutilizables = " + muertos, x - j, 600);
+		if(times[4]<(int)(100*contagiados/N)){
+			times[4]=(int)(100*contagiados/N);
+		}
+		if(times[4]<50 && times[4]>=25 && times[0]==0){
+			times[0]=t;
+		}
+		else if ( times[4]<75 && times[4]>=50 && times[1]==0){
+			times[1]=t;
+			if(times[0]==0){
+				times[0]=t;
+			}
+		}
+		else if(times[4]<100 && times[4]>=75 && times[2]==0){
+			times[2]=t;
+			if(times[1]==0){
+				times[1]=t;
+			}
+			if(times[0]==0){
+				times[0]=t;
+			}
+		}
+		if(times[4]==100&&times[3]==0){
+			times[3]=t;
+			if(times[2]==0){
+				times[2]=t;
+			}
+			if(times[0]==0){
+				times[0]=t;
+
+			}if(times[1]==0) {
+				times[1] = t;
+			}
+		}
+		System.out.println(Arrays.toString(times));
+		j = f2.stringWidth("Max contagio = " + times[4] +"%");
+		g1.drawString("Max contagio = " + times[4] +"%", x - j, 800);
+
+
+
+		j = f2.stringWidth("Porcentaje contagio = " + (int)(100*contagiados/N) +"%");
+		g1.drawString("Porcentaje contagio = " + (int)(100*contagiados/N) +"%", x - j, 900);
 //Reset
 		sanos = muertos = contagiados = recuperados = 0;
 
@@ -269,11 +311,11 @@ class testGraphDraw {
 	//Here is some example syntax for the GraphDraw class
 	public static void main(String[] args) throws InterruptedException {
 		final int numeroNodos = 100;
-		final int contagiados_iniciales = 3;
+		final int contagiados_iniciales = 10;
 		Observador espia = new Observador(numeroNodos);
 		Ambiente frame = new Ambiente(
 				numeroNodos,
-				0.3,
+				0.9,
 				0.4, 0.6,
 				0, 1,
 				0, 1,0.2,
@@ -293,7 +335,7 @@ class testGraphDraw {
 			frame.setT(t);
 			frame.setAct(false);
 			frame.Rutine();
-			Thread.sleep(1500);
+			Thread.sleep(2000);
 			frame.Actualizar();
 			frame.deleteDeads();
 			frame.repaint();
