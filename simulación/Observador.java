@@ -18,14 +18,15 @@ class Observador {
 	private int numeroContagiados;
 	private int[] contagioPorAmigos;
 	private int tick;
-	private ArrayDeque<Integer> contagioPorTick;
+	public ArrayDeque<Integer> contagioPorTick;
 	private int numNodos;
 	private Bag porcentajeAmigosContagiados;
 	JFreeChart barChart;
 	static int Contador = 0;
 	private int id;
+	public String nombreCaso;
 
-	Observador(int numeroNodos) {
+	Observador(int numeroNodos, String nombreCaso) {
 		contagioPorAmigos = new int[numeroNodos];
 		tick = 0;
 		contagioPorTick = new ArrayDeque<>();
@@ -33,6 +34,32 @@ class Observador {
 		numNodos = numeroNodos;
 		porcentajeAmigosContagiados = new HashBag();
 		id = Contador++;
+		this.nombreCaso = nombreCaso;
+	}
+
+	static void compararTicks(Observador[] observadores, int width, int height) {
+		DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
+		for (Observador obs : observadores) {
+			for (int i = 0; i < obs.tick; i++) {
+				barDataset.addValue(
+						(obs.contagioPorTick.toArray(new Integer[obs.tick]))[i],
+						obs.nombreCaso,
+						String.valueOf(i)
+				);
+			}
+		}
+		JFreeChart barChart = ChartFactory.createBarChart(
+				"Comparación contagios por tick",
+				"casos", "numero por turno",
+				barDataset, PlotOrientation.VERTICAL,
+				true, true, false
+		);
+		File BarChart = new File("comparaciónTicks.jpeg");
+		try {
+			ChartUtils.saveChartAsJPEG(BarChart, barChart, width, height);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void estadisticas() {
@@ -103,7 +130,7 @@ class Observador {
 				barDataset, PlotOrientation.VERTICAL,
 				true, true, false
 		);
-		File BarChart = new File("relacionAmigosContagiados" + id +".jpeg");
+		File BarChart = new File("relacionAmigosContagiados" + id + ".jpeg");
 		try {
 			ChartUtils.saveChartAsJPEG(BarChart, barChart, width, height);
 		} catch (Exception e) {
@@ -129,7 +156,6 @@ class Observador {
 	private double contagioPorTurno() {
 		return (double) numeroContagiados / tick;
 	}
-
 
 	@Override
 	public String toString() {
